@@ -1,10 +1,12 @@
 package com.runanywhere.runanywhereai.presentation.models
 
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.runanywhere.sdk.models.DeviceInfo
 import com.runanywhere.sdk.models.collectDeviceInfo
+import com.runanywhere.sdk.public.RunAnywhere
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,7 +38,7 @@ class ModelsViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 // Load from SDK - NO MOCK DATA
-                val sdkModels = com.runanywhere.sdk.public.RunAnywhere.availableModels()
+                val sdkModels = RunAnywhere.availableModels()
 
                 // Extract frameworks from models (convert enum to string)
                 val frameworks = sdkModels
@@ -49,6 +51,9 @@ class ModelsViewModel : ViewModel() {
                         )
                     }
 
+                // Get currently loaded model
+                val currentModel = RunAnywhere.currentModel
+
                 // Convert SDK models to UI state
                 val models = sdkModels.map { sdkModel ->
                     ModelItemState(
@@ -59,7 +64,7 @@ class ModelsViewModel : ViewModel() {
                         format = sdkModel.format.name,
                         supportsThinking = sdkModel.supportsThinking,
                         isDownloaded = sdkModel.localPath != null,
-                        isLoaded = false, // Would need to check current loaded model
+                        isLoaded = currentModel?.id == sdkModel.id, // Check if this is the loaded model
                         isDownloading = false,
                         downloadProgress = 0f
                     )
@@ -72,11 +77,13 @@ class ModelsViewModel : ViewModel() {
                     )
                 }
             } catch (e: Exception) {
+                Log.e("ModelsViewModel", "Failed to load models: ${e.message}", e)
                 // Handle error - show empty state
                 _uiState.update {
                     it.copy(
                         frameworks = emptyList(),
-                        models = emptyList()
+                        models = emptyList(),
+                        error = "Failed to load models: ${e.message}"
                     )
                 }
             }
@@ -103,74 +110,118 @@ class ModelsViewModel : ViewModel() {
 
     fun downloadModel(modelId: String) {
         viewModelScope.launch {
-            // TODO: Call SDK download with progress
-            // com.runanywhere.sdk.public.extensions.downloadModel(modelId)
-
-            // Update model state to downloading
-            _uiState.update { state ->
-                state.copy(
-                    models = state.models.map {
-                        if (it.id == modelId) it.copy(isDownloading = true, downloadProgress = 0f)
-                        else it
-                    }
-                )
-            }
-
-            // Simulate download progress (replace with actual SDK progress)
-            for (progress in 1..10) {
-                kotlinx.coroutines.delay(500)
+            try {
+                Log.d("ModelsViewModel", "Starting download for model: $modelId")
+                
+                // Update model state to downloading
                 _uiState.update { state ->
                     state.copy(
                         models = state.models.map {
-                            if (it.id == modelId) it.copy(downloadProgress = progress / 10f)
+                            if (it.id == modelId) it.copy(isDownloading = true, downloadProgress = 0f)
                             else it
                         }
                     )
                 }
-            }
 
-            // Mark as downloaded
-            _uiState.update { state ->
-                state.copy(
-                    models = state.models.map {
-                        if (it.id == modelId) it.copy(
-                            isDownloading = false,
-                            isDownloaded = true,
-                            downloadProgress = 1f
+                // Call SDK to download model with progress tracking
+                RunAnywhere.downloadModel(modelId).collect { progress ->
+                    Log.d("ModelsViewModel", "Download progress for $modelId: ${(progress * 100).toInt()}%")
+                    _uiState.update { state ->
+                        state.copy(
+                            models = state.models.map {
+                                if (it.id == modelId) it.copy(downloadProgress = progress)
+                                else it
+                            }
                         )
-                        else it
                     }
-                )
+                }
+
+                Log.d("ModelsViewModel", "✅ Download completed for model: $modelId")
+
+                // Mark as downloaded
+                _uiState.update { state ->
+                    state.copy(
+                        models = state.models.map {
+                            if (it.id == modelId) it.copy(
+                                isDownloading = false,
+                                isDownloaded = true,
+                                downloadProgress = 1f
+                            )
+                            else it
+                        }
+                    )
+                }
+
+            } catch (e: Exception) {
+                Log.e("ModelsViewModel", "❌ Download failed for $modelId: ${e.message}", e)
+                _uiState.update { state ->
+                    state.copy(
+                        models = state.models.map {
+                            if (it.id == modelId) it.copy(
+                                isDownloading = false,
+                                downloadProgress = 0f
+                            )
+                            else it
+                        },
+                        error = "Download failed: ${e.message}"
+                    )
+                }
             }
         }
     }
 
     fun loadModel(modelId: String) {
         viewModelScope.launch {
-            // TODO: Call SDK to load model
-            // com.runanywhere.sdk.public.extensions.loadModelWithInfo(modelInfo)
+            try {
+                Log.d("ModelsViewModel", "Loading model: $modelId")
 
-            // Unload any currently loaded model
-            _uiState.update { state ->
-                state.copy(
-                    models = state.models.map { it.copy(isLoaded = it.id == modelId) }
-                )
+                // Call SDK to load model
+                val success = RunAnywhere.loadModel(modelId)
+
+                if (success) {
+                    Log.d("ModelsViewModel", "✅ Model loaded successfully: $modelId")
+                    
+                    // Update UI state - unload any previously loaded model and load this one
+                    _uiState.update { state ->
+                        state.copy(
+                            models = state.models.map { 
+                                it.copy(isLoaded = it.id == modelId) 
+                            }
+                        )
+                    }
+                } else {
+                    Log.e("ModelsViewModel", "❌ Failed to load model: $modelId")
+                    _uiState.update { it.copy(error = "Failed to load model") }
+                }
+
+            } catch (e: Exception) {
+                Log.e("ModelsViewModel", "❌ Load failed for $modelId: ${e.message}", e)
+                _uiState.update { it.copy(error = "Load failed: ${e.message}") }
             }
         }
     }
 
     fun deleteModel(modelId: String) {
         viewModelScope.launch {
-            // TODO: Call SDK to delete model
-            // com.runanywhere.sdk.public.RunAnywhere.deleteModel(modelId)
+            try {
+                Log.d("ModelsViewModel", "Deleting model: $modelId")
 
-            _uiState.update { state ->
-                state.copy(
-                    models = state.models.map {
-                        if (it.id == modelId) it.copy(isDownloaded = false, isLoaded = false)
-                        else it
-                    }
-                )
+                // TODO: Call SDK to delete model when API is available
+                // For now, just update UI state
+                _uiState.update { state ->
+                    state.copy(
+                        models = state.models.map {
+                            if (it.id == modelId) it.copy(isDownloaded = false, isLoaded = false)
+                            else it
+                        }
+                    )
+                }
+
+                Log.d("ModelsViewModel", "✅ Model deleted: $modelId")
+
+            } catch (e: Exception) {
+                Log.e("ModelsViewModel", "❌ Delete failed for $modelId: ${e.message}", e)
+                _uiState.update { it.copy(error = "Delete failed: ${e.message}") }
             }
         }
     }

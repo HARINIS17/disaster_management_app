@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="60dp"
+    android:viewportWidth="200"
+    android:viewportHeight="60">
+
+    <!-- Shield icon on left -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M25,8 L35,11 L35,22 Q35,32 25,42 Q15,32 15,22 L15,11 Z" />
+
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M25,11 L33,13.5 L33,22 Q33,30 25,38 Q17,30 17,22 L17,13.5 Z" />
+
+    <!-- Emergency cross -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M23,15 L27,15 L27,23 L23,23 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M21,18 L29,18 L29,22 L21,22 Z" />
+
+    <!-- Alert triangle -->
+    <path
+        android:fillColor="#FFC107"
+        android:pathData="M25,43 L18,52 L32,52 Z" />
+
+    <path
+        android:fillColor="#B71C1C"
+        android:pathData="M24.5,45 L25.5,45 L25.5,49 L24.5,49 Z" />
+    <path
+        android:fillColor="#B71C1C"
+        android:pathData="M24.5,50 L25.5,50 L25.5,51 L24.5,51 Z" />
+
+    <!-- Text: "Disaster Response" styled -->
+    <!-- Letter D -->
+    <path
+        android:fillColor="#263238"
+        android:pathData="M48,18 L53,18 Q58,18 58,23 Q58,28 53,28 L48,28 Z M50,20 L50,26 L53,26 Q56,26 56,23 Q56,20 53,20 Z" />
+
+    <!-- Letter i -->
+    <path
+        android:fillColor="#263238"
+        android:pathData="M62,18 L64,18 L64,28 L62,28 Z M62,14 L64,14 L64,16 L62,16 Z" />
+
+    <!-- Letter s -->
+    <path
+        android:fillColor="#263238"
+        android:pathData="M68,18 L74,18 L74,20 L68,20 Q68,22 70,22 L73,22 Q75,22 75,25 L75,28 L69,28 L69,26 L75,26 Q75,24 73,24 L70,24 Q68,24 68,21 Z" />
+
+    <!-- Letter a -->
+    <path
+        android:fillColor="#263238"
+        android:pathData="M79,18 L84,18 L84,28 L82,28 L82,26 Q81,28 79,28 Q77,28 77,25 L77,21 Q77,18 79,18 Z M79,20 Q79,20 79,21 L79,25 Q79,26 80,26 Q82,26 82,24 L82,20 Z" />
+
+    <!-- Letter s -->
+    <path
+        android:fillColor="#263238"
+        android:pathData="M88,18 L94,18 L94,20 L88,20 Q88,22 90,22 L93,22 Q95,22 95,25 L95,28 L89,28 L89,26 L95,26 Q95,24 93,24 L90,24 Q88,24 88,21 Z" />
+
+    <!-- Letter t -->
+    <path
+        android:fillColor="#263238"
+        android:pathData="M99,14 L101,14 L101,18 L104,18 L104,20 L101,20 L101,26 Q101,28 103,28 L104,28 L104,30 L103,30 Q99,30 99,26 L99,20 L97,20 L97,18 L99,18 Z" />
+
+    <!-- Letter e -->
+    <path
+        android:fillColor="#263238"
+        android:pathData="M108,18 L113,18 Q115,18 115,21 L115,22 L108,22 L108,25 Q108,26 110,26 L115,26 L115,28 L110,28 Q108,28 108,25 Z M108,20 L108,21 L113,21 Q113,20 111,20 Z" />
+
+    <!-- Letter r -->
+    <path
+        android:fillColor="#263238"
+        android:pathData="M119,18 L121,18 L121,20 Q122,18 124,18 L125,18 L125,20 L124,20 Q121,20 121,23 L121,28 L119,28 Z" />
+
+    <!-- Second line: "Emergency Aid" in smaller text -->
+    <!-- R -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M48,38 L52,38 Q54,38 54,40 Q54,41.5 52.5,42 L54,45 L52,45 L50.5,42 L50,42 L50,45 L48,45 Z M50,40 L50,41 L52,41 Q52.5,41 52.5,40.5 Q52.5,40 52,40 Z" />
+
+    <!-- e -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M56,38 L60,38 Q62,38 62,40.5 L62,41 L56,41 L56,43 Q56,44 58,44 L62,44 L62,45 L58,45 Q56,45 56,43 Z M56,39 L56,40 L60,40 Q60,39 58,39 Z" />
+
+    <!-- s -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M65,38 L69,38 L69,39 L65,39 Q65,40 66.5,40 L68.5,40 Q70,40 70,42 L70,45 L66,45 L66,44 L70,44 Q70,43 68.5,43 L66.5,43 Q65,43 65,41 Z" />
+
+    <!-- p -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M72,38 L76,38 Q78,38 78,40.5 Q78,43 76,43 L74,43 L74,47 L72,47 Z M74,39 L74,42 L76,42 Q76.5,42 76.5,40.5 Q76.5,39 76,39 Z" />
+
+    <!-- o -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M80,38 L84,38 Q86,38 86,41.5 Q86,45 84,45 L80,45 Q78,45 78,41.5 Q78,38 80,38 Z M80,39 Q80,39 80,41.5 Q80,44 82,44 Q84,44 84,41.5 Q84,39 82,39 Z" />
+
+    <!-- n -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M88,38 L90,38 L90,39 Q91,38 92,38 Q94,38 94,40 L94,45 L92,45 L92,40 Q92,39 91,39 Q90,39 90,40 L90,45 L88,45 Z" />
+
+    <!-- s -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M97,38 L101,38 L101,39 L97,39 Q97,40 98.5,40 L100.5,40 Q102,40 102,42 L102,45 L98,45 L98,44 L102,44 Q102,43 100.5,43 L98.5,43 Q97,43 97,41 Z" />
+
+    <!-- e -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M104,38 L108,38 Q110,38 110,40.5 L110,41 L104,41 L104,43 Q104,44 106,44 L110,44 L110,45 L106,45 Q104,45 104,43 Z M104,39 L104,40 L108,40 Q108,39 106,39 Z" />
+
+    <!-- Tagline underline -->
+    <path
+        android:fillColor="#E53935"
+        android:fillAlpha="0.3"
+        android:pathData="M48,47 L112,47 L112,48 L48,48 Z" />
+
+    <!-- Small emergency indicators -->
+    <path
+        android:fillColor="#FFC107"
+        android:pathData="M120,25 m-2,0 a2,2 0,1 1,4 0 a2,2 0,1 1,-4 0" />
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M130,30 m-2,0 a2,2 0,1 1,4 0 a2,2 0,1 1,-4 0" />
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M140,25 m-2,0 a2,2 0,1 1,4 0 a2,2 0,1 1,-4 0" />
+</vector>

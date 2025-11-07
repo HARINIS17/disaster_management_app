@@ -278,6 +278,7 @@ dependencies {
     // ========================================
     implementation(libs.google.play.core)
     implementation(libs.google.play.core.ktx)
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 
     // ========================================
     // Logging
