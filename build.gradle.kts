@@ -16,11 +16,22 @@
 //   publishSdkToMavenLocal - Publish SDK to Maven Local repository
 //
 // Run these tasks from IntelliJ run configurations or via:
-//   ./gradlew <taskName>
+//   ./gradlew <taskName>  (Unix/Mac)
+//   gradlew <taskName>    (Windows)
 
 plugins {
     // Apply plugins to submodules only - no root plugins needed for composite builds
     id("io.gitlab.arturbosch.detekt") version "1.23.8" apply false
+}
+
+// Helper function to get the correct gradlew command for the OS
+fun getGradlewCommand(workingDir: File): String {
+    val isWindows = System.getProperty("os.name").lowercase().contains("windows")
+    return if (isWindows) {
+        File(workingDir, "gradlew.bat").absolutePath
+    } else {
+        "./gradlew"
+    }
 }
 
 // Configure all projects
@@ -47,9 +58,10 @@ tasks.register("buildAndroidApp") {
     group = "android"
     description = "Build Android sample app (SDK builds automatically as local module)"
     doLast {
+        val androidAppDir = file("examples/android/RunAnywhereAI")
         exec {
-            workingDir = file("examples/android/RunAnywhereAI")
-            commandLine("./gradlew", "assembleDebug")
+            workingDir = androidAppDir
+            commandLine(getGradlewCommand(androidAppDir), "assembleDebug")
         }
         println(" Android app built successfully")
     }
@@ -61,16 +73,17 @@ tasks.register("runAndroidApp") {
     doLast {
         // 1. Build app (SDK builds automatically)
         println(" Building Android app...")
+        val androidAppDir = file("examples/android/RunAnywhereAI")
         exec {
-            workingDir = file("examples/android/RunAnywhereAI")
-            commandLine("./gradlew", "assembleDebug")
+            workingDir = androidAppDir
+            commandLine(getGradlewCommand(androidAppDir), "assembleDebug")
         }
 
         // 2. Install on connected device
         println(" Installing app...")
         exec {
-            workingDir = file("examples/android/RunAnywhereAI")
-            commandLine("./gradlew", "installDebug")
+            workingDir = androidAppDir
+            commandLine(getGradlewCommand(androidAppDir), "installDebug")
         }
 
         // 3. Launch the app
@@ -99,19 +112,21 @@ tasks.register("buildIntellijPlugin") {
     description = "Build IntelliJ plugin (publishes SDK to Maven Local first)"
     doLast {
         // 1. Publish SDK to Maven Local (plugin can't use local module)
-        println("📦 Publishing SDK to Maven Local...")
+        println(" Publishing SDK to Maven Local...")
+        val rootGradlew = getGradlewCommand(projectDir)
         exec {
             workingDir = projectDir
-            commandLine("./gradlew", ":sdk:runanywhere-kotlin:publishToMavenLocal")
+            commandLine(rootGradlew, ":sdk:runanywhere-kotlin:publishToMavenLocal")
         }
 
         // 2. Build plugin
-        println("💡 Building IntelliJ plugin...")
+        println(" Building IntelliJ plugin...")
+        val pluginDir = file("examples/intellij-plugin-demo/plugin")
         exec {
-            workingDir = file("examples/intellij-plugin-demo/plugin")
-            commandLine("./gradlew", "buildPlugin")
+            workingDir = pluginDir
+            commandLine(getGradlewCommand(pluginDir), "buildPlugin")
         }
-        println("✅ IntelliJ plugin built successfully")
+        println(" IntelliJ plugin built successfully")
     }
 }
 
@@ -120,19 +135,21 @@ tasks.register("runIntellijPlugin") {
     description = "Build and run IntelliJ plugin in sandbox (publishes SDK first)"
     doLast {
         // 1. Publish SDK to Maven Local (plugin can't use local module)
-        println("📦 Publishing SDK to Maven Local...")
+        println(" Publishing SDK to Maven Local...")
+        val rootGradlew = getGradlewCommand(projectDir)
         exec {
             workingDir = projectDir
-            commandLine("./gradlew", ":sdk:runanywhere-kotlin:publishToMavenLocal")
+            commandLine(rootGradlew, ":sdk:runanywhere-kotlin:publishToMavenLocal")
         }
 
         // 2. Build and run plugin
-        println("💡 Building and running IntelliJ plugin...")
+        println(" Building and running IntelliJ plugin...")
+        val pluginDir = file("examples/intellij-plugin-demo/plugin")
         exec {
-            workingDir = file("examples/intellij-plugin-demo/plugin")
-            commandLine("./gradlew", "runIde")
+            workingDir = pluginDir
+            commandLine(getGradlewCommand(pluginDir), "runIde")
         }
-        println("✅ IntelliJ plugin launched successfully")
+        println(" IntelliJ plugin launched successfully")
     }
 }
 
@@ -145,12 +162,12 @@ tasks.register("publishSdkToMavenLocal") {
     description = "Publish SDK to Maven Local (for external projects, not needed for examples)"
     dependsOn(":sdk:runanywhere-kotlin:publishToMavenLocal")
     doLast {
-        println("✅ SDK published to Maven Local (~/.m2/repository)")
+        println(" SDK published to Maven Local (~/.m2/repository)")
         println("   Group: com.runanywhere.sdk")
         println("   Artifact: RunAnywhereKotlinSDK")
         println("   Version: 0.1.0")
         println("")
-        println("📝 Note: This is automatically done for IntelliJ plugin tasks.")
+        println(" Note: This is automatically done for IntelliJ plugin tasks.")
         println("   Android app uses SDK as local module and doesn't need this.")
     }
 }
@@ -170,16 +187,18 @@ tasks.register("cleanAll") {
 
         // Clean Android app
         println(" Cleaning Android app...")
+        val androidAppDir = file("examples/android/RunAnywhereAI")
         exec {
-            workingDir = file("examples/android/RunAnywhereAI")
-            commandLine("./gradlew", "clean")
+            workingDir = androidAppDir
+            commandLine(getGradlewCommand(androidAppDir), "clean")
         }
 
         // Clean IntelliJ plugin
         println(" Cleaning IntelliJ plugin...")
+        val pluginDir = file("examples/intellij-plugin-demo/plugin")
         exec {
-            workingDir = file("examples/intellij-plugin-demo/plugin")
-            commandLine("./gradlew", "clean")
+            workingDir = pluginDir
+            commandLine(getGradlewCommand(pluginDir), "clean")
         }
 
         println(" All projects cleaned successfully")

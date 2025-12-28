@@ -20,7 +20,7 @@ The iOS SDK provides high-performance on-device text generation, complete voice 
 The Android Kotlin Multiplatform SDK provides high-performance on-device text generation with streaming support, comprehensive model management, structured outputs with JSON generation, and thinking model support for privacy-first AI applications. [View Android SDK →](sdk/runanywhere-kotlin/)
 
 ## 🎯 See It In Action
-
+ 
 <p align="center">
   <a href="https://www.youtube.com/watch?v=GG100ijJHl4">
     <img src="https://img.shields.io/badge/▶️_Watch_Demo-red?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Demo" />
@@ -167,12 +167,6 @@ print("Tokens: \(result.tokensUsed)")
 ### Android SDK (Available Now)
 
 ```kotlin
-import com.runanywhere.sdk.public.RunAnywhere
-import com.runanywhere.sdk.llm.llamacpp.LlamaCppModule
-import com.runanywhere.sdk.models.RunAnywhereGenerationOptions
-import com.runanywhere.sdk.data.models.SDKEnvironment
-
-// 1. Initialize the SDK
 suspend fun initializeSDK() {
     // Register LlamaCpp module for GGUF model support
     LlamaCppModule.register()
